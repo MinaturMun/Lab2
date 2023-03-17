@@ -1,6 +1,5 @@
 <?php
-
-require ('../config/db.php');
+require('../lib/Picture.php');
 
 $files = $dbh->query('SELECT * FROM `pictures`;')->fetchAll(PDO::FETCH_ASSOC);
 
@@ -25,14 +24,18 @@ $files = $dbh->query('SELECT * FROM `pictures`;')->fetchAll(PDO::FETCH_ASSOC);
 <?php
 
 if (!empty($_GET['pic_id'])) {
-    $q = $dbh->prepare('SELECT imagepath, pic_name as name, size FROM `pictures` WHERE id = :id', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-    $q->execute([':id' => $_GET['pic_id']]);
-    $result = $q->fetch();
+    // $q = $dbh->prepare('SELECT imagepath, pic_name as name, size FROM `pictures` WHERE id = :id', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+    // $q->execute([':id' => $_GET['pic_id']]);
+    // $result = $q->fetch();
+
+    $Per2=new Picture();
+    $Per2->fromDb($_GET['pic_id']);
+
     ?>
     <figure>
-        <img src="<?= '../' . $result['imagepath'] ?>" style="max-width: 800px;max-height: 500px;" />
+        <img src="<?= '../' . $Per2->imagepatch ?>" style="max-width: 800px;max-height: 500px;" />
         <figcaption>
-            File name: <?= $result['name']; ?> | File size: <?= convert($result['size']); ?>
+            File name: <?= $Per2->name; ?> | File size: <?= convert($Per2->size); ?>
         </figcaption>
     </figure>
     

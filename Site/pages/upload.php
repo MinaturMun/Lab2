@@ -1,6 +1,6 @@
 <?php
 
-require ('../config/db.php');
+require('../lib/Picture.php');
 
 $f = $_FILES;
 
@@ -12,10 +12,9 @@ if (!empty($f['file']['tmp_name'])) {
     $filepath = 'images/' . $name;
     
     move_uploaded_file($file['tmp_name'], "../$filepath");
-    
-    $q = $dbh->prepare('INSERT INTO `pictures` (pic_name, size, imagepath) VALUE (:name, :size, :filepath);', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-    $q->execute([':name' => $name, ':size' => $file['size'], ':filepath' => $filepath]);
 
+    $Per = new Picture($name,$file['size'],$filepath);
+    $Per->toDb();
 }
 
 ?>
